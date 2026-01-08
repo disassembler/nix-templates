@@ -1,0 +1,45 @@
+set shell := ["bash", "-uc"]
+set positional-arguments
+
+# List all just recipes available
+default:
+  @just --list
+
+# Deploy select machines
+apply machine:
+  colmena apply --verbose --on {{machine}}
+
+# Build a nixos configuration
+build-machine MACHINE *ARGS:
+  nix build -L .#nixosConfigurations.{{MACHINE}}.config.system.build.toplevel {{ARGS}}
+
+# Build a nixos installer iso
+build-iso MACHINE *ARGS:
+  nix build -L .#nixosConfigurations.{{MACHINE}}.config.system.build.isoImage {{ARGS}}
+
+# Build all nixosConfigurations
+build-machines *ARGS:
+  #!/usr/bin/env nu
+  let nodes = (nix eval --json '.#nixosConfigurations' --apply builtins.attrNames | from json)
+  for node in $nodes {just build-machine $node {{ARGS}}}
+
+bootstrap-machine machine ip:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  echo "--- 1. Partitioning and Formatting ---"
+  # Build the script locally and store the path
+  DISKO_SCRIPT=$(nix build .#nixosConfigurations.{{machine}}.config.system.build.diskoScript --no-link --print-out-paths)
+  
+  # Copy the closure and execute
+  nix copy --to ssh://root@{{ip}} "$DISKO_SCRIPT"
+  ssh root@{{ip}} "$DISKO_SCRIPT"
+
+  TOPLEVEL=$(nix build .#nixosConfigurations.{{machine}}.config.system.build.toplevel --no-link --print-out-paths)
+  nix copy --to ssh://root@{{ip}} "$TOPLEVEL"
+
+  ssh root@{{ip}} "nixos-install --system $TOPLEVEL --no-root-passwd --no-channel-copy"
+
+  ssh root@{{ip}} "umount -R /mnt"
+
+  echo "Reboot the machine!"
