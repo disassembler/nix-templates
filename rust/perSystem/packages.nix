@@ -52,6 +52,16 @@
     # Build dependencies separately for better caching
     cargoArtifacts = craneLib.buildDepsOnly commonArgs;
   in {
+    checks = {
+      clippy = craneLib.cargoClippy (commonArgs
+        // {
+          inherit cargoArtifacts;
+          cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+        });
+
+      fmt = craneLib.cargoFmt {inherit src;};
+    };
+
     packages = {
       default = config.packages.${crateInfo.pname};
 

@@ -2,7 +2,7 @@
 name = "yourapp"
 version = "0.1.0"
 edition = "2021"
-license = "MIT Or Apache-2.0"
+license = "Apache-2.0"
 repository = "https://github.com/disassembler/yourapp"
 
 [dependencies]
