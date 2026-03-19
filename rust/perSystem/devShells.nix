@@ -2,22 +2,26 @@
   perSystem = {
     config,
     pkgs,
+    inputs',
     ...
-  }: {
+  }: let
+    toolchain = with inputs'.fenix.packages;
+      combine [
+        stable.rustc
+        stable.cargo
+        stable.clippy
+        stable.rustfmt
+        stable.rust-analyzer
+      ];
+  in {
     devShells.default = with pkgs;
       mkShell {
         packages = [
-          cargo
+          toolchain
           cmake
-          rustc
           pkg-config
           openssl
           zlib
-          rust-analyzer
-          rustfmt
-          libclang
-          clippy
-          clang-tools
           config.treefmt.build.wrapper
         ];
       };
