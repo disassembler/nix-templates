@@ -19,18 +19,17 @@
     ...
   } @ inputs: let
     inherit ((import ./flake/lib.nix {inherit inputs;}).flake.lib) recursiveImports;
-  in
-    (flake-parts.lib.mkFlake {inherit inputs;} {
-      imports =
-        recursiveImports [
-          ./flake
-          ./perSystem
-        ]
-        ++ [
-          inputs.treefmt-nix.flakeModule
-        ];
-      systems = [
-        "x86_64-linux"
+  in (flake-parts.lib.mkFlake {inherit inputs;} {
+    imports =
+      recursiveImports [
+        ./flake
+        ./perSystem
+      ]
+      ++ [
+        inputs.treefmt-nix.flakeModule
       ];
-    });
+    systems = [
+      "x86_64-linux"
+    ];
+  });
 }
