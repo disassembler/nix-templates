@@ -1,32 +1,28 @@
 {inputs, ...}: {
   perSystem = {
     config,
-    system,
     pkgs,
-    lib,
+    inputs',
     ...
   }: {
     devShells.default =
       pkgs.mkShell
       {
-        nativeBuildInputs = let
-          inherit (inputs.sops-nix.packages."${system}") sops-import-keys-hook ssh-to-pgp sops-init-gpg-key;
-        in
-          with pkgs; [
-            wireguard-tools
-            jq
-            age
-            ssh-to-age
-            pwgen
-            just
-            nushell
-            inputs.colmena.packages.${system}.colmena
-            inputs.disko.packages.${system}.disko
-            sops-import-keys-hook
-            ssh-to-pgp
-            sops-init-gpg-key
-            config.treefmt.build.wrapper
-          ];
+        packages = with pkgs; [
+          wireguard-tools
+          jq
+          age
+          ssh-to-age
+          pwgen
+          just
+          nushell
+          inputs'.colmena.packages.colmena
+          inputs'.disko.packages.disko
+          inputs'.sops-nix.packages.sops-import-keys-hook
+          inputs'.sops-nix.packages.ssh-to-pgp
+          inputs'.sops-nix.packages.sops-init-gpg-key
+          config.treefmt.build.wrapper
+        ];
       };
   };
 }

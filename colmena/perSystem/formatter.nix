@@ -2,22 +2,20 @@
   perSystem = {config, ...}: {
     treefmt = {
       projectRootFile = "flake.nix";
+
       programs.alejandra.enable = true;
+      programs.taplo.enable = true;
+      programs.prettier.enable = true;
+
       settings.global.excludes = [
         "*.lock"
         "*.patch"
-        "package-lock.json"
-        "go.mod"
-        "go.sum"
         ".gitattributes"
         ".gitignore"
         ".gitmodules"
         "LICENSE"
       ];
-      settings.formatter.alejandra = {
-        includes = ["**/*.nix"];
-      };
-      programs.prettier.enable = true;
+
       settings.formatter.prettier = {
         includes = ["*.md" "*.yml" "*.yaml"];
       };
