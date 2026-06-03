@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yourapp"
+version = "0.1.0"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+yourapp = "yourapp:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yourapp"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

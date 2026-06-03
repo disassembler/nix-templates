@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+.venv
+dist
+build
+*.egg-info
+result
+.direnv
+.claude/settings.local.json
