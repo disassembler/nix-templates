@@ -53,6 +53,26 @@
           3. Happy hacking!
         '';
       };
+      elm = {
+        path = ./elm;
+        description = "Elm development with flake-parts";
+        welcomeText = ''
+          # Elm Template Initialized
+
+          Structure:
+          - `perSystem/`: Package, DevShell, and Formatter definitions.
+          - `flake/`: Overlays, Modules, and Library functions.
+          - `src/`: Elm source files.
+
+          Next steps:
+          1. Run `nix develop` to enter the shell.
+          2. Update `elm.json` and `flake.nix` with your project name.
+          3. Run `elm2nix convert > elm-packages.nix && elm2nix snapshot`.
+          4. Run `nix build` to compile to result/index.html.
+          5. Run `elm-live src/Main.elm` for a live-reload dev server.
+          6. Happy hacking!
+        '';
+      };
 
     };
 
